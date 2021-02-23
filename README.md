@@ -1,7 +1,7 @@
 # md2html - Markdown to HTML
 
 [![dot NET 5](https://img.shields.io/badge/.NET-5.0-orange.svg)](https://dotnet.microsoft.com/download/dotnet/5.0)
-[![package license](https://img.shields.io/github/license/algonzalez/ok-cli-tool.svg)](LICENSE.txt)
+[![package license](https://img.shields.io/github/license/algonzalez/md-to-html.svg)](LICENSE.txt)
 ![supported platforms](https://img.shields.io/badge/platforms-windows-lightgray.svg)
 ![platforms pending testing](https://img.shields.io/badge/platforms%20pending%20testing-linux%20%7C%20macos-lightgray.svg)
 
