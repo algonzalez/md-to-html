@@ -1,0 +1,23 @@
+#-- Directories
+[Bb]in/
+[Oo]bj/
+tmp/
+.git/
+.vs/
+.vscode/
+
+#-- Files
+*.bak.*
+*.bak
+*.dll
+*.exe
+*.ldf
+*.log
+*.mdf
+*.msi
+*.sqlite
+*.suo
+
+#-- OS Files
+*.DS_Store
+[Tt]humbs.db

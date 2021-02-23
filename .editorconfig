@@ -1,0 +1,52 @@
+# see http://editorconfig.org/ for details
+
+# top-most EditorConfig file; stops searching parent directories.
+root = true
+
+# Defaults: UTF-8, Windows-style newline,
+#           4 space indents,
+#           newline ending every file,
+#           trim trailing whitespace
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{css,htm,html,js,json,jsx,less,sass,scss,svg,ts,tsx,vue}]
+indent_size = 2
+
+# trailing whitespace may be relevant
+[*.{diff,md,markdown}]
+trim_trailing_whitespace = false
+
+# Batch Files
+[*.{cmd,bat}]
+end_of_line = crlf
+
+# Bash Files
+[*.sh]
+end_of_line = lf
+
+# Visual Studio solution files
+[*.sln]
+indent_style= tab
+
+# Visual Studio XML project files
+[*.{csproj,vbproj}]
+end_of_line = crlf
+indent_size = 2
+
+# TODO: .NET extensions to .editorconfig file
+# see: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview
+[*.cs]
+# IDE0017: Use object initializers
+dotnet_style_object_initializer = false
+
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = false
+
+# IDE0090: Simplify 'new' expression
+csharp_style_implicit_object_creation_when_type_is_apparent = false
