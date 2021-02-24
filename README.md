@@ -5,9 +5,8 @@
 ![supported platforms](https://img.shields.io/badge/platforms-windows-lightgray.svg)
 ![platforms pending testing](https://img.shields.io/badge/platforms%20pending%20testing-linux%20%7C%20macos-lightgray.svg)
 
-A command line tool to convert markdown formatted files to HTML.
-
-**Idea:** Combine with [wkhtmltopdf](https://wkhtmltopdf.org/) to go from Markdown to PDF.
+md2html is a command-line interface (CLI) tool for converting markdown formatted files into HTML.
+It wraps the [Markdig](https://github.com/xoofx/markdig) markdown processing library with a command-line driven UI.
 
 ## Dependencies
 
@@ -18,35 +17,13 @@ See the [LICENSE.txt](LICENSE.txt) file for copyright and license information fo
 
 ## Usage
 
-Convert a file and write the html to stdout, then redirect the stdout to a file.
-```
-md2html README.md > README.html
-```
-
-Convert all the files with an '.md' extension. Files will be written to the same directory but with an '.html' extenstion.
-```
-md2html --to-file --overwrite *.md
-```
-
-The previous options can be shortened and combined.
-```
-md2html -fo *.md
-```
-
-Convert all the files witn an '.md' extension, but write to the 'htmlfiles' directory (directory must already exist).
-```
-md2html -fo *.md --outdir htmlfiles
-```
-
-Convert a file and specify a style sheet file that will be merged into the html file.
-```
-md2html -fo README.md --style custom.css
-```
-
-Convert a file and specify a style sheet URL that will be linked to from the html file.
-```
-md2html -fo README.md --style https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.7.2/tufte.min.css
-```
+- `md2html --help` shows help with available options.
+- `md2html HowTo.md` converts the file and writes the HTML to stdout.
+- `md2html --to-file HowTo.md` results in a *HowTo.html* file in the same directory as the *HowTo<span>.</span>md* file. It will fail if the *HowTo.html* file already exists. Adding the `--overwrite` option will attempt to replace the file with the new HTML.
+- `md2html --to-file HowTo.md CHANGELOG.md` will convert the two specified files. You can also use wildcards `md2html --to-file *.md` or mix and match `md2html --to-file HowTo.md docs\*.md`.
+- `md2html --to-file --outdir htmlfiles HowTo.md` results in a *HowTo.html* file in the htmlfiles directory.
+- `md2html --to-file HowTo.md --style custom.css` will merge the contents of the *custom.css* into the html file.
+- `md2html --to-file HowTo.md --style https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.7.2/tufte.min.css` will include a stylesheet link tag pointing to the specified URL.
 
 ## Authors
 
