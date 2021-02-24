@@ -1,6 +1,7 @@
 #-- Directories
 [Bb]in/
 [Oo]bj/
+dist/
 tmp/
 .git/
 .vs/
