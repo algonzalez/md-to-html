@@ -141,7 +141,7 @@ namespace MD2Html
                 foreach (var provider in StyleProviders) {
                     sw.WriteLine(provider.GetStyle());
                 }
-                sw.WriteLine($@"  </head>\n  <body>");
+                sw.WriteLine("  </head>\n  <body>");
             }
             var renderer = new HtmlRenderer(sw);
             pipeline.Setup(renderer);
