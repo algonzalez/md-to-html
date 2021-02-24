@@ -14,26 +14,10 @@ namespace MD2Html.Providers.Style
         public DefaultStyleProvider() {
             _style = new Lazy<string>(() =>
                 "    <style>\n"
-                + ReadDefaultCssFromManifestResource()
+                + new Gonzal.ManifestResourceManager().GetString("resources/default.css")
                 + "    </style>");
         }
 
         public string GetStyle() => _style.Value;
-
-        private static string ReadDefaultCssFromManifestResource()
-        {
-            var assembly = System.Reflection.Assembly.GetEntryAssembly();
-            var name = $"{assembly.GetName().Name}.default.css";
-            using (var stream = assembly.GetManifestResourceStream(name))
-            {
-                if (stream == null)
-                    return "";
-
-                using (var sr = new System.IO.StreamReader(stream))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-        }
     }
 }

@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="default.css" />
+    <EmbeddedResource Include="resources/default.css" />
   </ItemGroup>
 
   <Target Name="CopyLicenseFileOnBuild" AfterTargets="AfterBuild">
