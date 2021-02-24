@@ -115,9 +115,9 @@ namespace MD2Html
             rootCommand.AddOption(outDirOption);
 
             var styleOption = new Option<string>(new [] {"--style", "-s"},
-                description: "CSS file or URL to be added to the html output")
+                description: "CSS file or URL to be added to the html output;\na file will be merged and a URL will be linked")
             {
-                AllowMultipleArgumentsPerToken = true,
+                AllowMultipleArgumentsPerToken = false,
                 Argument = new Argument<string>("styleFile")
                 {
                     Arity = ArgumentArity.OneOrMore
