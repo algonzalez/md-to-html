@@ -38,9 +38,14 @@ Convert all the files witn an '.md' extension, but write to the 'htmlfiles' dire
 md2html -fo *.md --outdir htmlfiles
 ```
 
-Convert a file and specify a style sheet that will be written in to the <head> area of the html file.
+Convert a file and specify a style sheet file that will be merged into the html file.
 ```
 md2html -fo README.md --style custom.css
+```
+
+Convert a file and specify a style sheet URL that will be linked to from the html file.
+```
+md2html -fo README.md --style https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.7.2/tufte.min.css
 ```
 
 ## Authors
