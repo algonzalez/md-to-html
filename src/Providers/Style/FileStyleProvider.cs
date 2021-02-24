@@ -16,8 +16,10 @@ namespace MD2Html.Providers.Style
             _fileInfo = new FileInfo(fileName);
              if (!_fileInfo.Exists)
                 throw new ArgumentException("Specified style file was not found");
-            _style = new Lazy<string>(()
-                => "    <style>\n"+ File.ReadAllText(_fileInfo.FullName) + "    </style>");
+            _style = new Lazy<string>(() =>
+                "    <style>\n"
+                + File.ReadAllText(_fileInfo.FullName)
+                + "    </style>");
         }
 
         public string GetStyle() => _style.Value;

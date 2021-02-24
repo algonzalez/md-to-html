@@ -16,6 +16,10 @@
     <!-- <VersionSuffix>alpha</VersionSuffix> -->
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="default.css" />
+  </ItemGroup>
+
   <Target Name="CopyLicenseFileOnBuild" AfterTargets="AfterBuild">
     <Copy SourceFiles="../LICENSE.txt" DestinationFolder="$(OutDir)" />
   </Target>
