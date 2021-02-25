@@ -1,6 +1,5 @@
 // Copyright 2020 Alberto Gonzalez. All rights reserved.
 // Licensed under the MIT License. See LICENSE.txt file in the project root for full license information.
-// TODO: add Gonzal copyright to License.txt???
 
 using System.IO;
 using System.Reflection;
