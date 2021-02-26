@@ -9,11 +9,11 @@
     <AssemblyTitle>Gonzal Markdown to HTML</AssemblyTitle>
     <Copyright>Copyright 2021 Alberto Gonzalez</Copyright>
     <Description>Convert Markdown formatted files to HTML</Description>
-    <InformationalVersion>1.0.0-alpha</InformationalVersion>
+    <InformationalVersion>1.0.0-beta</InformationalVersion>
     <Product>Gonzal Markdown Tools</Product>
     <!-- <Version></Version> -->
     <!-- <VersionPrefix>1.0.0</VersionPrefix> -->
-    <!-- <VersionSuffix>alpha</VersionSuffix> -->
+    <!-- <VersionSuffix>beta</VersionSuffix> -->
   </PropertyGroup>
 
   <ItemGroup>

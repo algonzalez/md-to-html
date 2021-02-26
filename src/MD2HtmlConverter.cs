@@ -18,6 +18,12 @@ namespace MD2Html
         public static readonly int DefaultMaxFileSizeSupported = 64*1024; // 64K
         public static readonly int MinFileSizeSupported = 4*1024;         //  4K
 
+        private readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
+                .UseEmojiAndSmiley()
+                .UseYamlFrontMatter()       // used to extract the title
+                .UseAdvancedExtensions()
+                .Build();
+
         int _maxFileSizeSupported = DefaultMaxFileSizeSupported;
         string _outputDirectory = null;
         IStyleProvider[] _styleProviders;
@@ -116,12 +122,7 @@ namespace MD2Html
 
             string mdText = File.ReadAllText(fi.FullName);
 
-            var pipeline = new MarkdownPipelineBuilder()
-                .UseAdvancedExtensions()
-                .UseYamlFrontMatter()
-                .Build();
-
-            var mdDoc = Markdown.Parse(mdText, pipeline);
+            var mdDoc = Markdown.Parse(mdText, _pipeline);
             string title = mdDoc.GetTitleFromYamlFrontMatter()
                 ?? mdDoc.GetFirstH1Text()
                 ?? Path.GetFileNameWithoutExtension(fi.FullName);
@@ -144,7 +145,7 @@ namespace MD2Html
                 sw.WriteLine("  </head>\n  <body>");
             }
             var renderer = new HtmlRenderer(sw);
-            pipeline.Setup(renderer);
+            _pipeline.Setup(renderer);
             renderer.Render(mdDoc);
 
             if (!ContentOnly)
