@@ -31,6 +31,8 @@ namespace MD2Html
 
         public bool ContentOnly { get; set; }
 
+        public bool LaunchFile { get; set; }
+
         public int MaxFileSizeSupported {
             get => _maxFileSizeSupported;
             set => _maxFileSizeSupported = value < MinFileSizeSupported
@@ -164,6 +166,13 @@ namespace MD2Html
             }
 
             File.WriteAllText(outputFilePath, sw.ToString());
+            if (OutputToFile && LaunchFile) {
+                new System.Diagnostics.Process() {
+                    StartInfo = new System.Diagnostics.ProcessStartInfo(outputFilePath) {
+                        UseShellExecute = true
+                    }
+                }.Start();
+            }
         }
     }
 }

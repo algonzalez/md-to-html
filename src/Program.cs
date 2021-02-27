@@ -4,11 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
-using MD2Html.Providers.SyntaxHighlighting;
-using MD2Html.Providers.Style;
 using System.Reflection;
 
 namespace MD2Html
@@ -19,73 +16,13 @@ namespace MD2Html
         {
             var assembly = Assembly.GetExecutingAssembly();
             var rootCommand = ConfigureCommands(assembly);
-            rootCommand.Handler = CommandHandler.Create<
-                List<string>
-                , bool
-                , bool
-                , bool
-                , string
-                , string
-                , string[]>(ProcessFiles);
+            rootCommand.Handler = new ProcessFilesCommandHandler();
             var result = rootCommand.Parse(args);
 
             static bool IsHelpOption(string t) => t == "-h" || t == "--help" || t == "-?";
             if (result.Tokens.Select(t => t.Value).Any(IsHelpOption))
                 WriteCopyrightHelpHeader(assembly);
             return rootCommand.Invoke(args);
-        }
-
-        private static int ProcessFiles(
-            List<string> files
-            , bool toFile
-            , bool overwrite
-            , bool contentOnly
-            , string outDir
-            , string highlighter
-            , string[] style)
-        {
-            MD2HtmlConverter converter;
-            try
-            {
-                if (style == null)
-                    style = Array.Empty<string>();
-                converter = new MD2HtmlConverter() {
-                    OutputDirectory = outDir?.Trim(),
-                    OutputToFile = toFile || outDir != null,
-                    OverwriteIfExists = overwrite,
-                    ContentOnly = contentOnly,
-                    SyntaxHighlightingProvider
-                        = string.IsNullOrWhiteSpace(highlighter)
-                            ? null
-                            : new FileSyntaxHighlightingProvider(highlighter),
-                    StyleProviders = new IStyleProvider[style.Length]
-                };
-                for (int i = 0; i < style.Length; i++) {
-                    converter.StyleProviders[i]
-                        = style[i].StartsWith("https://") || style[i].StartsWith("http://")
-                            ? new UrlStyleProvider(style[i])
-                            : new FileStyleProvider(style[i]);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Oops: {ex.Message}");
-                // Console.WriteLine(ex.StackTrace);
-                return 1;
-            }
-
-            (int processedCount, int failedCount, string[] errorMessages)
-                = converter.Convert(files.ToArray());
-
-            int successCount = processedCount - failedCount;
-            if (processedCount == 0)
-                return 2;   // no file found
-            if (successCount == 0)
-                return 1;   // error
-            if (errorMessages.Length > 0)
-                return 3;   // some success
-
-            return 0;
         }
 
         private static RootCommand ConfigureCommands(Assembly assembly)
@@ -98,6 +35,9 @@ namespace MD2Html
 
             rootCommand.AddOption(new Option<bool>(new [] {"--overwrite", "-o"},
                 description: "Will overwrite the html file if it already exists"));
+
+            rootCommand.AddOption(new Option<bool>(new [] {"--launch", "-l"},
+                description: "Launch the html file in the associated application"));
 
             var outDirArgument =new Argument<string>("outputDir", "HEY,YOU!")
             {
