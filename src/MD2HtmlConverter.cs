@@ -141,6 +141,10 @@ namespace MD2Html
                 if (mdDoc.FindBlocksByType<FencedCodeBlock>().Any())
                     sw.WriteLine(SyntaxHighlightingProvider.GetSyntaxHighLighter());
 
+                if (mdDoc.FindBlocksByType<FencedCodeBlock>().Any(b => ((FencedCodeBlock)b).Info.Trim().StartsWith("mermaid", StringComparison.OrdinalIgnoreCase)))
+                    sw.WriteLine(@"    <script src=""https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js""></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>");
+
                 foreach (var provider in StyleProviders) {
                     sw.WriteLine(provider.GetStyle());
                 }
