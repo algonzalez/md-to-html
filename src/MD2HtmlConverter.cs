@@ -10,6 +10,7 @@ using Markdig.Renderers;
 using Markdig.Syntax;
 using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Providers.Style;
+using Markdig.Extensions.Mathematics;
 
 namespace MD2Html
 {
@@ -139,11 +140,26 @@ namespace MD2Html
       {title}
     </title>");
                 if (mdDoc.FindBlocksByType<FencedCodeBlock>().Any())
+                {
                     sw.WriteLine(SyntaxHighlightingProvider.GetSyntaxHighLighter());
 
-                if (mdDoc.FindBlocksByType<FencedCodeBlock>().Any(b => ((FencedCodeBlock)b).Info.Trim().StartsWith("mermaid", StringComparison.OrdinalIgnoreCase)))
-                    sw.WriteLine(@"    <script src=""https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js""></script>
+                    static bool IsMermaidBlock(FencedCodeBlock b)
+                        => b.Info != null && b.Info.Trim().StartsWith("mermaid", StringComparison.OrdinalIgnoreCase);
+
+                    if (mdDoc.FindBlocksByType<FencedCodeBlock>()
+                        .Any(b => IsMermaidBlock((FencedCodeBlock)b)))
+                    {
+                        sw.WriteLine(@"    <script src=""https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js""></script>
     <script>mermaid.initialize({startOnLoad:true});</script>");
+                    }
+                }
+
+                if (mdDoc.FindBlocksByType<Block>().Where(b => b is MathBlock
+                    || (b is ParagraphBlock pblock
+                        && pblock.Inline.Any(l => l is MathInline))).Any())
+                {
+                    sw.WriteLine(@"    <script id=""MathJax-script"" async src=""https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js""></script>");
+                }
 
                 foreach (var provider in StyleProviders) {
                     sw.WriteLine(provider.GetStyle());
