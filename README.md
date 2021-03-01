@@ -5,13 +5,23 @@
 ![supported platforms](https://img.shields.io/badge/platforms-windows-lightgray.svg)
 ![platforms pending testing](https://img.shields.io/badge/platforms%20pending%20testing-linux%20%7C%20macos-lightgray.svg)
 
-md2html is a command-line interface (CLI) tool for converting markdown formatted files into HTML.
-It wraps the [Markdig](https://github.com/xoofx/markdig) markdown processing library with a command-line driven UI.
+md2html is a command-line interface (CLI) tool for converting markdown
+formatted files into HTML. It wraps the [Markdig] markdown processing library
+with a command-line driven UI.
+
+I like to write my markdown documents in the [Visual Studio Code] editor with the 
+help of the [Markdown All in One] and the [Markdown Preview Mermaid Support]
+extensions. These extensions are great, but they are still missing a few 
+useful additions to markdown. This is what [Markdig] adds to the mix. 
+[Markdig] provides quite a few useful additions to markdown, 
+like ^ for superscript, ~ for subscript, grid tables, 
+definition lists, ordered lists with alpha characters 
+or roman numerals and even emojis.
 
 ## Dependencies
 
-- [Markdig](https://github.com/xoofx/markdig) parses the markdown and renders the HTML.
-- [System.CommandLine](https://github.com/dotnet/command-line-api) parses command line arguments and options.
+- [Markdig] parses the markdown and renders the HTML.
+- [System.CommandLine] parses command line arguments and options.
 
 See the [LICENSE.txt](LICENSE.txt) file for copyright and license information for each dependency. 
 
@@ -39,3 +49,10 @@ md2html is Copyright 2021 by Alberto Gonzalez, All Rights Reserved.
 It is licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. 
 
 You may obtain a copy of the License in the [LICENSE.txt](LICENSE.txt) file, or at [https://opensource.org/licenses/Apache-2.0](https://opensource.org/licenses/Apache-2.0)
+
+
+[Markdig]: https://github.com/xoofx/markdig
+[Markdown All in One]: https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+[Markdown Preview Mermaid Support]: https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid
+[System.CommandLine]: https://github.com/dotnet/command-line-api
+[Visual Studio Code]: https://code.visualstudio.com/
