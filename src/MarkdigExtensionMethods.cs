@@ -2,34 +2,29 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace MD2Html
 {
     static class MarkdigExtensionMethods
     {
-        public static IEnumerable<Block> FindBlocksByType<TBlockType>(this MarkdownDocument mdDoc)
-            where TBlockType : Block
-        {
-            return FindBlocksByType<TBlockType>((ContainerBlock)mdDoc);
-        }
+        public static bool AnyCode(this MarkdownDocument mdDoc)
+            => mdDoc.Descendants<Block>().Any(b
+                => b is FencedCodeBlock
+                    || (b is ParagraphBlock pblock && pblock.Inline.Descendants<CodeInline>().Any()));
 
-        private static IEnumerable<Block> FindBlocksByType<TBlockType>(Block block)
-            where TBlockType : Block
-        {
-            if (block is ContainerBlock childBlocks) {
-                foreach(var childBlock in childBlocks.SelectMany(FindBlocksByType<TBlockType>)) {
-                    yield return childBlock;
-                }
-            }
-            if (block is TBlockType)
-                yield return block;
-            else
-                yield break;
-        }
+        public static bool AnyMath(this MarkdownDocument mdDoc)
+            => mdDoc.Descendants<Block>().Any(b
+                => b is MathBlock
+                    || (b is ParagraphBlock pblock && pblock.Inline.Descendants<MathInline>().Any()));
+
+        public static bool AnyMermaidBlocks(this MarkdownDocument mdDoc)
+            => mdDoc.Descendants<FencedCodeBlock>().Any(b
+                => (b.Info ?? "").Trim().StartsWith("mermaid", StringComparison.OrdinalIgnoreCase));
 
         public static string GetFirstH1Text(this MarkdownDocument mdDoc)
         {

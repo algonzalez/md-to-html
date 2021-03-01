@@ -4,13 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Syntax;
 using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Providers.Style;
-using Markdig.Extensions.Mathematics;
 
 namespace MD2Html
 {
@@ -139,26 +137,17 @@ namespace MD2Html
     <title>
       {title}
     </title>");
-                if (mdDoc.FindBlocksByType<FencedCodeBlock>().Any())
-                {
+                if (mdDoc.AnyCode()) {
                     sw.WriteLine(SyntaxHighlightingProvider.GetSyntaxHighLighter());
-
-                    static bool IsMermaidBlock(FencedCodeBlock b)
-                        => b.Info != null && b.Info.Trim().StartsWith("mermaid", StringComparison.OrdinalIgnoreCase);
-
-                    if (mdDoc.FindBlocksByType<FencedCodeBlock>()
-                        .Any(b => IsMermaidBlock((FencedCodeBlock)b)))
-                    {
-                        sw.WriteLine(@"    <script src=""https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js""></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>");
-                    }
                 }
 
-                if (mdDoc.FindBlocksByType<Block>().Where(b => b is MathBlock
-                    || (b is ParagraphBlock pblock
-                        && pblock.Inline.Any(l => l is MathInline))).Any())
-                {
-                    sw.WriteLine(@"    <script id=""MathJax-script"" async src=""https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js""></script>");
+                if (mdDoc.AnyMermaidBlocks()) {
+                    sw.WriteLine("    <script src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script>");
+                    sw.WriteLine("    <script>mermaid.initialize({startOnLoad:true});</script>");
+                }
+
+                if (mdDoc.AnyMath()) {
+                    sw.WriteLine("    <script id=\"MathJax-script\" async src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js\"></script>");
                 }
 
                 foreach (var provider in StyleProviders) {
