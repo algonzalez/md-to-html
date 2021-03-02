@@ -28,7 +28,7 @@ namespace MD2Html
 
         public static string GetFirstH1Text(this MarkdownDocument mdDoc)
         {
-            var hBlock = mdDoc.Descendants<HeadingBlock>().Where(b => b.Level == 1).FirstOrDefault();
+            var hBlock = mdDoc.Descendants<HeadingBlock>().FirstOrDefault(b => b.Level == 1);
             return hBlock?.Inline?.FirstChild?.ToString();
         }
 
@@ -39,8 +39,8 @@ namespace MD2Html
             var yamlBlock = mdDoc.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
             string title = (yamlBlock?.Lines.Lines
                     .Select(sl => sl.ToString())
-                    .Where(s => s.TrimStart().StartsWith("title:", StringComparison.OrdinalIgnoreCase))
-                    .FirstOrDefault() ?? "title:").Split(':')[1].Trim();
+                    .FirstOrDefault(s => s.TrimStart().StartsWith("title:", StringComparison.OrdinalIgnoreCase))
+                        ?? "title:").Split(':')[1].Trim();
 
             if (title.Length == 0)
                 return null;

@@ -25,7 +25,7 @@ namespace MD2Html
                 ctx.ParseResult.ValueForOption<string[]>("--style")
             );
 
-            return Task.FromResult<int>(result);
+            return Task.FromResult(result);
         }
 
         private static int ProcessFiles(
@@ -41,8 +41,7 @@ namespace MD2Html
             MD2HtmlConverter converter;
             try
             {
-                if (style == null)
-                    style = Array.Empty<string>();
+                style ??= Array.Empty<string>();
                 converter = new MD2HtmlConverter() {
                     OutputDirectory = outDir?.Trim(),
                     OutputToFile = toFile || outDir != null,

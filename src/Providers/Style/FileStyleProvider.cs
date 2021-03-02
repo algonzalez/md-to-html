@@ -8,17 +8,16 @@ namespace MD2Html.Providers.Style
 {
     class FileStyleProvider : IStyleProvider
     {
-        readonly FileInfo _fileInfo;
         readonly Lazy<string> _style;
 
         public FileStyleProvider(string fileName)
         {
-            _fileInfo = new FileInfo(fileName);
-             if (!_fileInfo.Exists)
+            var fi = new FileInfo(fileName);
+             if (!fi.Exists)
                 throw new ArgumentException("Specified style file was not found");
             _style = new Lazy<string>(() =>
                 "    <style>\n"
-                + File.ReadAllText(_fileInfo.FullName)
+                + File.ReadAllText(fi.FullName)
                 + "    </style>");
         }
 

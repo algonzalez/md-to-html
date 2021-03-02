@@ -8,15 +8,14 @@ namespace MD2Html.Providers.SyntaxHighlighting
 {
     class FileSyntaxHighlightingProvider : ISyntaxHighlightingProvider
     {
-        readonly FileInfo _fileInfo;
         readonly Lazy<string> _syntaxHighligher;
 
         public FileSyntaxHighlightingProvider(string fileName)
         {
-            _fileInfo = new FileInfo(fileName);
-             if (!_fileInfo.Exists)
+            var fi = new FileInfo(fileName);
+             if (!fi.Exists)
                 throw new ArgumentException("Specified  Syntax Highligher file wasn't found");
-            _syntaxHighligher = new Lazy<string>(() => File.ReadAllText(_fileInfo.FullName));
+            _syntaxHighligher = new Lazy<string>(() => File.ReadAllText(fi.FullName));
         }
 
         public string GetSyntaxHighLighter() => _syntaxHighligher.Value;

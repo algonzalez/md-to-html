@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using Markdig;
 using Markdig.Renderers;
-using Markdig.Syntax;
 using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Providers.Style;
 
@@ -24,7 +23,7 @@ namespace MD2Html
                 .Build();
 
         int _maxFileSizeSupported = DefaultMaxFileSizeSupported;
-        string _outputDirectory = null;
+        string _outputDirectory;
         IStyleProvider[] _styleProviders;
         ISyntaxHighlightingProvider _codeSyntaxHighlightingProvider;
 
@@ -55,7 +54,7 @@ namespace MD2Html
 
         public IStyleProvider[] StyleProviders {
             get => _styleProviders.Length == 0
-                    ? _styleProviders = new [] { new DefaultStyleProvider() }
+                    ? _styleProviders = new IStyleProvider[] { new DefaultStyleProvider() }
                     : _styleProviders;
             set => _styleProviders = value;
         }
