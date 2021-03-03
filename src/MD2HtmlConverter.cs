@@ -1,13 +1,16 @@
 // Copyright 2021 Alberto Gonzalez. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE.txt file in the project root for full license information.
+// Licensed under the Apache License, Version 2.0.
+// See LICENSE.txt file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Markdig;
 using Markdig.Renderers;
+using Markdig.Renderers.Html;
 using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Providers.Style;
+using MD2Html.Renderers;
 
 namespace MD2Html
 {
@@ -154,7 +157,15 @@ namespace MD2Html
                 }
                 sw.WriteLine("  </head>\n  <body>");
             }
+
             var renderer = new HtmlRenderer(sw);
+            if (mdDoc.AnyTocBlocks()) {
+                var i = renderer.ObjectRenderers.FindIndex(r => r is ParagraphRenderer);
+                if (i > -1)
+                    renderer.ObjectRenderers.RemoveAt(i);
+                renderer.ObjectRenderers.Add(new CustomParagraphRenderer(mdDoc.BuildHtmlToc()));
+            }
+
             _pipeline.Setup(renderer);
             renderer.Render(mdDoc);
 
