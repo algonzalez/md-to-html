@@ -20,8 +20,10 @@ namespace MD2Html
                 ctx.ParseResult.ValueForOption<bool>("--overwrite"),
                 ctx.ParseResult.ValueForOption<bool>("--content-only"),
                 ctx.ParseResult.ValueForOption<bool>("--launch"),
+                ctx.ParseResult.ValueForOption<bool>("--no-toc"),
                 ctx.ParseResult.ValueForOption<string>("--out-dir"),
                 ctx.ParseResult.ValueForOption<string>("--highlighter"),
+                ctx.ParseResult.ValueForOption<string>("--toc-class"),
                 ctx.ParseResult.ValueForOption<string[]>("--style")
             );
 
@@ -34,8 +36,10 @@ namespace MD2Html
             , bool overwrite
             , bool contentOnly
             , bool launch
+            , bool skipToc
             , string outDir
             , string highlighter
+            , string tocClassName
             , string[] style)
         {
             MD2HtmlConverter converter;
@@ -52,7 +56,9 @@ namespace MD2Html
                         = string.IsNullOrWhiteSpace(highlighter)
                             ? null
                             : new FileSyntaxHighlightingProvider(highlighter),
-                    StyleProviders = new IStyleProvider[style.Length]
+                    StyleProviders = new IStyleProvider[style.Length],
+                    SkipToc = skipToc,
+                    TocClassName = tocClassName
                 };
                 for (int i = 0; i < style.Length; i++) {
                     converter.StyleProviders[i]

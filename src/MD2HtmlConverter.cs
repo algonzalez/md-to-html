@@ -27,6 +27,7 @@ namespace MD2Html
 
         int _maxFileSizeSupported = DefaultMaxFileSizeSupported;
         string _outputDirectory;
+        string _tocClassName;
         IStyleProvider[] _styleProviders;
         ISyntaxHighlightingProvider _codeSyntaxHighlightingProvider;
 
@@ -65,6 +66,16 @@ namespace MD2Html
         public ISyntaxHighlightingProvider SyntaxHighlightingProvider {
             get => _codeSyntaxHighlightingProvider ??= new DefaultSyntaxHighlightingProvider();
             set => _codeSyntaxHighlightingProvider = value;
+        }
+
+        public bool SkipToc { get; set; }
+
+        public string TocClassName {
+            get => _tocClassName;
+            set {
+                value = (value ?? "").Trim();
+                _tocClassName = value.Length > 0 ? value : "toc";
+            }
         }
 
         public (int processedCount, int failedCount, string[] errorMessages)
@@ -159,11 +170,11 @@ namespace MD2Html
             }
 
             var renderer = new HtmlRenderer(sw);
-            if (mdDoc.AnyTocBlocks()) {
+            if (!SkipToc && mdDoc.AnyTocBlocks()) {
                 var i = renderer.ObjectRenderers.FindIndex(r => r is ParagraphRenderer);
                 if (i > -1)
                     renderer.ObjectRenderers.RemoveAt(i);
-                renderer.ObjectRenderers.Add(new CustomParagraphRenderer(mdDoc.BuildHtmlToc()));
+                renderer.ObjectRenderers.Add(new CustomParagraphRenderer(mdDoc.BuildHtmlToc(TocClassName)));
             }
 
             _pipeline.Setup(renderer);

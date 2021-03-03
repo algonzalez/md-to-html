@@ -81,6 +81,16 @@ namespace MD2Html
             };
             rootCommand.AddOption(syntaxHightlighterOption);
 
+            rootCommand.AddOption(new Option<string>("--toc-class",
+                description: "The CSS class name for the div wrapping the toc.",
+                getDefaultValue: () => "toc")
+            {
+                Argument = new Argument<string>("className")
+            });
+
+            rootCommand.AddOption(new Option<bool>("--no-toc",
+                description: "Do not generate a Table of Contents"));
+
             rootCommand.AddOption(new Option<bool>("--content-only",
                 description: "Output content with no html, head, or body tags"));
 
