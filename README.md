@@ -18,6 +18,14 @@ like ^ for superscript, ~ for subscript, grid tables,
 definition lists, ordered lists with alpha characters 
 or roman numerals and even emojis.
 
+## How to Build
+
+1. Clone the repository by calling `git clone https://github.com/algonzalez/md-to-html.git`.
+2. From the cloned project's directory call `build` (or `build prompt` for an interactive mode).
+3. The resulting application will be in the *dist/any/* directory. 
+
+You can also call `build --help` to display the available targets.
+
 ## Dependencies
 
 - [Markdig] parses the markdown and renders the HTML.
