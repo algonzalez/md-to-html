@@ -25,9 +25,9 @@ namespace build
                 BackgroundColor = colors.bgColor;
             }
 
-            _isSingleFile = args.HasAnyMatching("--single-file");
+            _isSingleFile = args.Has("--single-file", ignoreCase: true);
             if (_isSingleFile) {
-                args = args.RemoveAllMatching("--single-file");
+                args = args.Remove("--single-file", ignoreCase: true);
             }
 
             Target("clean", "Delete the {project}/bin and {project}/obj directories.",
@@ -67,7 +67,7 @@ namespace build
             Target("all", $"builds all the targets: default, linux, macos & win10",
                 DependsOn("clean-all", "default", "linux", "macos", "win10"));
 
-            if (args.HasAnyMatching("-h", "--help", "-?")) {
+            if (args.HasAny(new [] {"-h", "--help", "-?"}, ignoreCase: true)) {
                 RunTargetsWithoutExiting(args);
                 // display additional usage details and features
                 WriteLine();
@@ -109,20 +109,13 @@ namespace build
 
     public static class ExtensionMethods
     {
-        public static bool HasAnyMatching(this string[] args, string value)
-            => args.Any(arg => string.Compare(arg, value, ignoreCase: true) == 0);
+        public static bool Has(this string[] array, string value, bool ignoreCase = false)
+            => array.Any(e => string.Compare(e, value, ignoreCase: ignoreCase) == 0);
 
-        public static bool HasAnyMatching(this string[] args, params string[] values)
-        {
-            foreach (var value in values)
-            {
-                if (args.HasAnyMatching(value))
-                    return true;
-            }
-            return false;
-        }
+        public static bool HasAny(this string[] array, string[] values, bool ignoreCase = false)
+            => array.Any(e => values.Has(e, ignoreCase));
 
-        public static string[] RemoveAllMatching(this string[] args, string value)
-            => args.Where(arg => string.Compare(arg, value, ignoreCase: true) != 0).ToArray();
+        public static string[] Remove(this string[] array, string value, bool ignoreCase = false)
+            => array.Where(e => string.Compare(e, value, ignoreCase: ignoreCase) != 0).ToArray();
     }
 }
