@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Markdig;
 using Markdig.Renderers;
@@ -106,8 +107,14 @@ namespace MD2Html
                     if (OutputToFile)
                         Console.WriteLine($">>> Converting: {filePath}");
                     ConvertFile(filePath, outputFilePath);
-                    if (OutputToFile)
+                    if (OutputToFile) {
                         Console.WriteLine($"    Success: {outputFilePath}");
+                        if (LaunchFile) {
+                            Process.Start(new ProcessStartInfo(outputFilePath) {
+                                UseShellExecute = true
+                            });
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -196,13 +203,6 @@ namespace MD2Html
             }
 
             File.WriteAllText(outputFilePath, sw.ToString());
-            if (OutputToFile && LaunchFile) {
-                new System.Diagnostics.Process() {
-                    StartInfo = new System.Diagnostics.ProcessStartInfo(outputFilePath) {
-                        UseShellExecute = true
-                    }
-                }.Start();
-            }
         }
     }
 }
