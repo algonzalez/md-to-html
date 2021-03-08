@@ -125,7 +125,7 @@ namespace MD2Html
                 processedCount++;
             }
 
-            if (OutputToFile && processedCount > 1) {
+            if (OutputToFile && processedCount > 1){
                 Console.WriteLine($"{processedCount} processed; {processedCount-failedCount} succeeded; {failedCount} failed");
             }
 
@@ -140,6 +140,14 @@ namespace MD2Html
 
             if (fi.Length > DefaultMaxFileSizeSupported)
                 throw new Exception($"Only supports converting files upto {MaxFileSizeSupported/1024}K in size");
+
+            if (OutputToFile && File.Exists(outputFilePath))
+            {
+                if (OverwriteIfExists)
+                    File.Delete(outputFilePath);
+                else
+                    throw new Exception("Output file already exists. Use the --overwrite option to replace it.");
+            }
 
             string mdText = File.ReadAllText(fi.FullName);
 
@@ -190,19 +198,10 @@ namespace MD2Html
             if (!ContentOnly)
                 sw.WriteLine("  </body>\n</html>");
 
-            if (!OutputToFile) {
+            if (OutputToFile)
+                File.WriteAllText(outputFilePath, sw.ToString());
+            else
                 Console.WriteLine(sw.ToString());
-                return;
-            }
-
-            if (File.Exists(outputFilePath)){
-                if (OverwriteIfExists)
-                    File.Delete(outputFilePath);
-                else
-                    throw new Exception("Output file already exists");
-            }
-
-            File.WriteAllText(outputFilePath, sw.ToString());
         }
     }
 }
