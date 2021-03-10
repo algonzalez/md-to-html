@@ -9,6 +9,7 @@ namespace build
 {
     class Program
     {
+        const string BUILD_SCRIPT_DIR = "./scripts/build";
         const string OUTPUT_DIR = "./dist";
         const string PROJECT_DIR = "./src";
         const string DEFAULT_RUNTIME = "any";
@@ -29,6 +30,28 @@ namespace build
             if (_isSingleFile) {
                 args = args.Remove("--single-file", ignoreCase: true);
             }
+
+            Target("check",
+                "Checks packages and lists those that have a newer version,\n               have been deprecated or have known vulnerabilities.",
+                () => {
+                    string[] checkPackageOptions = new[] {
+                        "--outdated", "--deprecated", "--vulnerable --include-transitive"
+                    };
+
+                    WriteLine(">>> ==============================");
+                    WriteLine(">>> Checking build script packages");
+                    WriteLine(">>> ==============================");
+                    foreach (var option in checkPackageOptions)
+                        Run("dotnet", $"list {BUILD_SCRIPT_DIR} package {option}");
+
+                    WriteLine();
+                    WriteLine(">>> =========================");
+                    WriteLine(">>> Checking project packages");
+                    WriteLine(">>> =========================");
+                    foreach (var option in checkPackageOptions)
+                        Run("dotnet", $"list {PROJECT_DIR} package {option}");
+                }
+            );
 
             Target("clean", "Delete the {project}/bin and {project}/obj directories.",
                 () => DeleteDirs($"{PROJECT_DIR}/bin", $"{PROJECT_DIR}/obj"));
