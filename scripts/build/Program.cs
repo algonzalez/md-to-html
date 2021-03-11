@@ -16,20 +16,16 @@ namespace build
         static readonly string PROJECT = $"{PROJECT_DIR}/md2html.csproj";
 
         static bool _isSingleFile = false;
+        static bool _zipFiles = false;
 
         static void Main(string[] args)
         {
             // save colors to restore at the end
-            var colors = new { fgColor = ForegroundColor, bgColor = BackgroundColor};
-            void restoreColors() {
-                ForegroundColor = colors.fgColor;
-                BackgroundColor = colors.bgColor;
-            }
+            var (fgColor, bgColor) = (ForegroundColor, BackgroundColor);
 
-            _isSingleFile = args.Has("--single-file", ignoreCase: true);
-            if (_isSingleFile) {
-                args = args.Remove("--single-file", ignoreCase: true);
-            }
+            _isSingleFile = CheckOptionAndRemove(ref args, "--single-file");
+
+            _zipFiles = CheckOptionAndRemove(ref args, "--zip");
 
             Target("check",
                 "Checks packages and lists those that have a newer version,\n               have been deprecated or have known vulnerabilities.",
@@ -69,7 +65,8 @@ namespace build
                     , new [] {"any", "linux-x64", "macos-x64", "win10-x64"}
                     , defaultValue: DEFAULT_RUNTIME);
                 _isSingleFile = (runtime != DEFAULT_RUNTIME)
-                    && Prompt.Confirm("set the PublishSingleFile property to true?", defaultValue: false);
+                    && Prompt.Confirm("Set the PublishSingleFile property to true?", defaultValue: false);
+                _zipFiles = Prompt.Confirm("Move files to a zip file after the build?", false);
                 if (Prompt.Confirm("Proceed with above values?", defaultValue: true)) {
                     Publish(runtime);
                 }
@@ -98,7 +95,8 @@ namespace build
                 WriteLine("  - default, linux, macos & win10 targets use the 'Release' configuration");
                 WriteLine("  - linux, macos & win10 targets build as --self-contained");
                 WriteLine("  - use --single-file option to set the PublishSingleFile property to true;\n    available for linux, macos & win10 targets");
-                restoreColors();
+                WriteLine("  - use --zip option to generate a compressed .zip file of the release");
+                RestoreColors();
                 System.Environment.Exit(0);
             }
 
@@ -106,26 +104,60 @@ namespace build
                 RunTargetsWithoutExiting(args);
             }
             finally {
-                restoreColors();
+                RestoreColors();
+            }
+
+            static bool CheckOptionAndRemove(ref string[] args, string optionName)
+            {
+                bool found = args.Has(optionName, ignoreCase: true);
+                if (found) {
+                    args = args.Remove(optionName, ignoreCase: true);
+                }
+                return found;
+            }
+
+            void RestoreColors() {
+                ForegroundColor = fgColor;
+                BackgroundColor = bgColor;
             }
         }
 
         static void DeleteDirs(params string[] dirs)
         {
             foreach (var dir in dirs) {
-                if (Directory.Exists(dir))
+                if (Directory.Exists(dir)) {
                     Directory.Delete(dir, recursive: true);
+                }
             }
         }
 
         static void Publish(string runtime)
         {
             string outputDir = $"{OUTPUT_DIR}/{runtime}";
+
             DeleteDirs(outputDir);
-            if (runtime == "any")
+
+            if (runtime == "any") {
                 Run("dotnet", $"publish -c Release -o {outputDir} {PROJECT}");
+            }
             else {
                 Run("dotnet", $"publish -c Release -o {outputDir} -r {runtime} -p:PublishSingleFile={_isSingleFile} {PROJECT}");
+            }
+
+            if (_zipFiles) {
+                string zipfilePath = Path.Combine(OUTPUT_DIR, Path.GetFileNameWithoutExtension(PROJECT))
+                    + $"-{runtime}.zip";
+
+                if (File.Exists(zipfilePath)) {
+                    File.Delete(zipfilePath);
+                }
+
+                System.IO.Compression.ZipFile.CreateFromDirectory(outputDir, zipfilePath
+                    , System.IO.Compression.CompressionLevel.Optimal
+                    , includeBaseDirectory: false);
+
+                WriteLine($"  {Path.GetFileNameWithoutExtension(PROJECT)} -> {zipfilePath}");
+                DeleteDirs(outputDir);
             }
         }
     }
