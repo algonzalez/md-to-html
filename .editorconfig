@@ -50,3 +50,24 @@ csharp_prefer_simple_using_statement = false
 
 # IDE0090: Simplify 'new' expression
 csharp_style_implicit_object_creation_when_type_is_apparent = false
+
+# -- TODO: still evaluating/testing
+# for other rules, see: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+# also see: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/
+# Consider VS Code setting: "[csharp]": { "editor.formatOnPaste": true, "editor.formatOnSave": true }
+csharp_new_line_before_open_brace = namespaces, types, methods, properties
+csharp_new_line_before_catch = true
+csharp_new_line_before_else = true
+csharp_new_line_before_finally = true
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+csharp_style_pattern_local_over_anonymous_function = false
+csharp_using_directive_placement = outside_namespace
+
+# Declare as int instead of Int32
+dotnet_style_predefined_type_for_locals_parameters_members = true
+dotnet_style_predefined_type_for_member_access = true
+
+# Handle usings -- not sure if this is working in VS Code
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = true

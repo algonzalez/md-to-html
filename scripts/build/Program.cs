@@ -60,9 +60,20 @@ namespace build
                 DependsOn("clean"),
                 () => Publish("any"));
 
+            Target("format", "",
+                () => {
+                    try {
+                        Run("dotnet", $"format {PROJECT}", workingDirectory: PROJECT_DIR);
+                    }
+                    catch (SimpleExec.NonZeroExitCodeException) {
+                        WriteLine("Target requires the dotnet-format tool.");
+                        WriteLine("Install it by running: dotnet tool install --global dotnet-format");
+                    }
+                });
+
             Target("prompt", "Interactive mode that will ask for available options.", () => {
                 var runtime = Prompt.Select("Select target runtime"
-                    , new [] {"any", "linux-x64", "macos-x64", "win10-x64"}
+                    , new[] { "any", "linux-x64", "macos-x64", "win10-x64" }
                     , defaultValue: DEFAULT_RUNTIME);
                 _isSingleFile = (runtime != DEFAULT_RUNTIME)
                     && Prompt.Confirm("Set the PublishSingleFile property to true?", defaultValue: false);
@@ -87,7 +98,7 @@ namespace build
             Target("all", $"builds all the targets: default, linux, macos & win10",
                 DependsOn("clean-all", "default", "linux", "macos", "win10"));
 
-            if (args.HasAny(new [] {"-h", "--help", "-?"}, ignoreCase: true)) {
+            if (args.HasAny(new[] { "-h", "--help", "-?", "-l", "--list-targets" }, ignoreCase: true)) {
                 RunTargetsWithoutExiting(args);
                 // display additional usage details and features
                 WriteLine();
@@ -116,7 +127,8 @@ namespace build
                 return found;
             }
 
-            void RestoreColors() {
+            void RestoreColors()
+            {
                 ForegroundColor = fgColor;
                 BackgroundColor = bgColor;
             }
