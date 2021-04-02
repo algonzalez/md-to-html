@@ -63,7 +63,7 @@ namespace build
             Target("format", "",
                 () => {
                     try {
-                        Run("dotnet", $"format {PROJECT}", workingDirectory: PROJECT_DIR);
+                        Run("dotnet", $"format {PROJECT}");
                     }
                     catch (SimpleExec.NonZeroExitCodeException) {
                         WriteLine("Target requires the dotnet-format tool.");
