@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine.Invocation;
-using MD2Html.Providers.SyntaxHighlighting;
-using MD2Html.Providers.Style;
 using System.Threading.Tasks;
+using MD2Html.Providers.Style;
+using MD2Html.Providers.SyntaxHighlighting;
 
 namespace MD2Html
 {
@@ -44,8 +44,7 @@ namespace MD2Html
             , string[] style)
         {
             MD2HtmlConverter converter;
-            try
-            {
+            try {
                 style ??= Array.Empty<string>();
                 converter = new MD2HtmlConverter() {
                     OutputDirectory = outDir?.Trim(),
@@ -68,8 +67,7 @@ namespace MD2Html
                             : new FileStyleProvider(style[i]);
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Console.WriteLine($"Oops: {ex.Message}");
                 // Console.WriteLine(ex.StackTrace);
                 return 1;

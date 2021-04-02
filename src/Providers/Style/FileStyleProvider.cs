@@ -14,7 +14,7 @@ namespace MD2Html.Providers.Style
         public FileStyleProvider(string fileName)
         {
             var fi = new FileInfo(fileName);
-             if (!fi.Exists)
+            if (!fi.Exists)
                 throw new ArgumentException("Specified style file was not found");
             _style = new Lazy<string>(() =>
                 "    <style>\n"

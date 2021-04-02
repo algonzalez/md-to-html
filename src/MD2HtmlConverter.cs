@@ -9,16 +9,16 @@ using System.IO;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
-using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Providers.Style;
+using MD2Html.Providers.SyntaxHighlighting;
 using MD2Html.Renderers;
 
 namespace MD2Html
 {
     class MD2HtmlConverter
     {
-        public static readonly int DefaultMaxFileSizeSupported = 64*1024; // 64K
-        public static readonly int MinFileSizeSupported = 4*1024;         //  4K
+        public static readonly int DefaultMaxFileSizeSupported = 64 * 1024; // 64K
+        public static readonly int MinFileSizeSupported = 4 * 1024;         //  4K
 
         private readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
                 .UseEmojiAndSmiley()
@@ -36,14 +36,16 @@ namespace MD2Html
 
         public bool LaunchFile { get; set; }
 
-        public int MaxFileSizeSupported {
+        public int MaxFileSizeSupported
+        {
             get => _maxFileSizeSupported;
             set => _maxFileSizeSupported = value < MinFileSizeSupported
                 ? MinFileSizeSupported
                 : value;
         }
 
-        public string OutputDirectory {
+        public string OutputDirectory
+        {
             get => _outputDirectory;
             set {
                 value = value?.Trim();
@@ -57,21 +59,24 @@ namespace MD2Html
 
         public bool OverwriteIfExists { get; set; }
 
-        public IStyleProvider[] StyleProviders {
+        public IStyleProvider[] StyleProviders
+        {
             get => _styleProviders.Length == 0
                     ? _styleProviders = new IStyleProvider[] { new DefaultStyleProvider() }
                     : _styleProviders;
             set => _styleProviders = value;
         }
 
-        public ISyntaxHighlightingProvider SyntaxHighlightingProvider {
+        public ISyntaxHighlightingProvider SyntaxHighlightingProvider
+        {
             get => _codeSyntaxHighlightingProvider ??= new DefaultSyntaxHighlightingProvider();
             set => _codeSyntaxHighlightingProvider = value;
         }
 
         public bool SkipToc { get; set; }
 
-        public string TocClassName {
+        public string TocClassName
+        {
             get => _tocClassName;
             set {
                 value = (value ?? "").Trim();
@@ -90,7 +95,7 @@ namespace MD2Html
                 return (processedCount, failedCount, Array.Empty<string>());
 
             var filePathsToConvert = new HashSet<string>();
-            foreach(var filePath in filePaths) {
+            foreach (var filePath in filePaths) {
                 var fi = new FileInfo(filePath);
                 var files = Directory.GetFiles(fi.DirectoryName, fi.Name);
                 foreach (var f in files)
@@ -102,8 +107,7 @@ namespace MD2Html
                 var outDir = OutputDirectory ?? fi.DirectoryName;
                 var outputFilePath = Path.ChangeExtension(Path.Combine(outDir, fi.Name), ".html");
 
-                try
-                {
+                try {
                     if (OutputToFile)
                         Console.WriteLine($">>> Converting: {filePath}");
                     ConvertFile(filePath, outputFilePath);
@@ -116,8 +120,7 @@ namespace MD2Html
                         }
                     }
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     failedCount++;
                     errorMessages.Add(ex.Message);
                     Console.Error.WriteLine($"    Error: {ex.Message}");
@@ -125,8 +128,8 @@ namespace MD2Html
                 processedCount++;
             }
 
-            if (OutputToFile && processedCount > 1){
-                Console.WriteLine($"{processedCount} processed; {processedCount-failedCount} succeeded; {failedCount} failed");
+            if (OutputToFile && processedCount > 1) {
+                Console.WriteLine($"{processedCount} processed; {processedCount - failedCount} succeeded; {failedCount} failed");
             }
 
             return (processedCount, failedCount, errorMessages.ToArray());
@@ -139,10 +142,9 @@ namespace MD2Html
                 throw new ArgumentException("File was not found");
 
             if (fi.Length > DefaultMaxFileSizeSupported)
-                throw new Exception($"Only supports converting files upto {MaxFileSizeSupported/1024}K in size");
+                throw new Exception($"Only supports converting files upto {MaxFileSizeSupported / 1024}K in size");
 
-            if (OutputToFile && File.Exists(outputFilePath))
-            {
+            if (OutputToFile && File.Exists(outputFilePath)) {
                 if (OverwriteIfExists)
                     File.Delete(outputFilePath);
                 else

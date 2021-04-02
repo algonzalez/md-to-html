@@ -14,7 +14,7 @@ namespace MD2Html.Providers.SyntaxHighlighting
         public FileSyntaxHighlightingProvider(string fileName)
         {
             var fi = new FileInfo(fileName);
-             if (!fi.Exists)
+            if (!fi.Exists)
                 throw new ArgumentException("Specified  Syntax Highligher file wasn't found");
             _syntaxHighligher = new Lazy<string>(() => File.ReadAllText(fi.FullName));
         }

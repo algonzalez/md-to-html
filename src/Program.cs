@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Alberto Gonzalez. All rights reserved.
+// Copyright 2021 Alberto Gonzalez. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 // See LICENSE.txt file in the project root for full license information.
 
@@ -31,43 +31,38 @@ namespace MD2Html
             var description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             var rootCommand = new RootCommand(description);
 
-            rootCommand.AddOption(new Option<bool>(new [] {"--to-file", "-f"},
+            rootCommand.AddOption(new Option<bool>(new[] { "--to-file", "-f" },
                 description: "Writes to files with markdown file name but with an .html extension"));
 
-            rootCommand.AddOption(new Option<bool>(new [] {"--overwrite", "-o"},
+            rootCommand.AddOption(new Option<bool>(new[] { "--overwrite", "-o" },
                 description: "Will overwrite the html file if it already exists"));
 
-            rootCommand.AddOption(new Option<bool>(new [] {"--launch", "-l"},
+            rootCommand.AddOption(new Option<bool>(new[] { "--launch", "-l" },
                 description: "Launch the html file in the associated application"));
 
-            var outDirArgument =new Argument<string>("outputDir", "HEY,YOU!")
-            {
+            var outDirArgument = new Argument<string>("outputDir", "HEY,YOU!") {
                 Arity = ArgumentArity.ExactlyOne
             };
             outDirArgument.AddValidator(result =>
                 !Directory.Exists(result.Tokens[0].Value)
                     ? $"No output directory matching '{result.Tokens[0].Value}'"
                     : null);
-            var outDirOption = new Option<string>(new[] {"--out-dir", "-d"},
-                description: "Directory to write the html files to; assumes --to-file flag")
-            {
+            var outDirOption = new Option<string>(new[] { "--out-dir", "-d" },
+                description: "Directory to write the html files to; assumes --to-file flag") {
                 Argument = outDirArgument
             };
             rootCommand.AddOption(outDirOption);
 
-            var styleOption = new Option<string>(new [] {"--style", "-s"},
-                description: "CSS file or URL to be added to the html output;\na file will be merged and a URL will be linked")
-            {
+            var styleOption = new Option<string>(new[] { "--style", "-s" },
+                description: "CSS file or URL to be added to the html output;\na file will be merged and a URL will be linked") {
                 AllowMultipleArgumentsPerToken = false,
-                Argument = new Argument<string>("styleFile")
-                {
+                Argument = new Argument<string>("styleFile") {
                     Arity = ArgumentArity.OneOrMore
                 }
             };
             rootCommand.AddOption(styleOption);
 
-            var highlighterFileArgument = new Argument<string>("highlighterFile")
-            {
+            var highlighterFileArgument = new Argument<string>("highlighterFile") {
                 Arity = ArgumentArity.ExactlyOne
             };
             highlighterFileArgument.AddValidator(result =>
@@ -75,8 +70,7 @@ namespace MD2Html
                     ? $"No file found matching '{result.Tokens[0].Value}'"
                     : null);
             var syntaxHightlighterOption = new Option<string>("--highlighter",
-                description: "File containing tags to include for syntax highlighting support")
-            {
+                description: "File containing tags to include for syntax highlighting support") {
                 AllowMultipleArgumentsPerToken = false,
                 Argument = highlighterFileArgument
             };
@@ -84,8 +78,7 @@ namespace MD2Html
 
             rootCommand.AddOption(new Option<string>("--toc-class",
                 description: "The CSS class name for the div wrapping the toc.",
-                getDefaultValue: () => "toc")
-            {
+                getDefaultValue: () => "toc") {
                 Argument = new Argument<string>("className")
             });
 
@@ -97,14 +90,15 @@ namespace MD2Html
 
             var filesArgument = new Argument<List<string>>("files",
                 "Markdown files to convert to HTML - supports wildcards") {
-                    Arity = new ArgumentArity(1, 16),
-                };
+                Arity = new ArgumentArity(1, 16),
+            };
+
             filesArgument.AddValidator(result => {
                 var fi = new FileInfo(result.Tokens[0].Value);
                 return (!fi.Exists && Directory.GetFiles(fi.DirectoryName).Length == 0)
                     ? $"No files found matching '{result.Tokens[0].Value}'"
                     : null;
-                });
+            });
 
             rootCommand.AddArgument(filesArgument);
 

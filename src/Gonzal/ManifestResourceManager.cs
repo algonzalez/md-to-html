@@ -19,7 +19,7 @@ namespace Gonzal
         }
 
         public string GetFullName(string name)
-            => $"{_assemblyName}.{name?.Replace('/', '.').Replace('\\','.')}";
+            => $"{_assemblyName}.{name?.Replace('/', '.').Replace('\\', '.')}";
 
         public ManifestResourceInfo GetInfo(string name)
             => _assembly.GetManifestResourceInfo(GetFullName(name));
@@ -30,7 +30,8 @@ namespace Gonzal
         public Stream GetStream(string name)
             => _assembly.GetManifestResourceStream(GetFullName(name));
 
-        public string GetString(string name) {
+        public string GetString(string name)
+        {
             var stream = GetStream(name);
             if (stream == null)
                 return null;

@@ -12,7 +12,8 @@ namespace MD2Html.Providers.Style
     {
         readonly Lazy<string> _style;
 
-        public DefaultStyleProvider() {
+        public DefaultStyleProvider()
+        {
             _style = new Lazy<string>(() =>
                 "    <style>\n"
                 + new Gonzal.ManifestResourceManager().GetString("resources/default.css")

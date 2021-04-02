@@ -40,8 +40,7 @@ namespace MD2Html
                 sbToc.Append("    ");
                 sbToc.AppendLine($"<div class=\"{tocClass}\">");
                 int curLevel = 0;
-                foreach (var block in hBlocks)
-                {
+                foreach (var block in hBlocks) {
                     if (block.Level > curLevel) {
                         sbToc.Append("    ");
                         sbToc.Append(new string(' ', curLevel * 2));
