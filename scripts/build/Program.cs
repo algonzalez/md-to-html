@@ -34,18 +34,24 @@ namespace build
                         "--outdated", "--deprecated", "--vulnerable --include-transitive"
                     };
 
+                    void RunChecks(string prjDir)
+                    {
+                        foreach (var option in checkPackageOptions) {
+                            WriteLine($"\n>>> Checking for {option.Split(' ')[0][2..]} packages");
+                            Run("dotnet", $"list {prjDir} package {option}");
+                        }
+                    };
+
                     WriteLine(">>> ==============================");
                     WriteLine(">>> Checking build script packages");
                     WriteLine(">>> ==============================");
-                    foreach (var option in checkPackageOptions)
-                        Run("dotnet", $"list {BUILD_SCRIPT_DIR} package {option}");
+                    RunChecks(BUILD_SCRIPT_DIR);
 
                     WriteLine();
                     WriteLine(">>> =========================");
                     WriteLine(">>> Checking project packages");
                     WriteLine(">>> =========================");
-                    foreach (var option in checkPackageOptions)
-                        Run("dotnet", $"list {PROJECT_DIR} package {option}");
+                    RunChecks(PROJECT_DIR);
                 }
             );
 
