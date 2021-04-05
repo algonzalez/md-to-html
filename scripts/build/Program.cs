@@ -27,8 +27,7 @@ namespace build
 
             _zipFiles = CheckOptionAndRemove(ref args, "--zip");
 
-            Target("check",
-                "Checks packages and lists those that have a newer version,\n               have been deprecated or have known vulnerabilities.",
+            Target("check", "Checks packages and lists those that have a newer version,\n             have been deprecated or have known vulnerabilities.",
                 () => {
                     string[] checkPackageOptions = new[] {
                         "--outdated", "--deprecated", "--vulnerable --include-transitive"
@@ -58,7 +57,7 @@ namespace build
             Target("clean", "Delete the {project}/bin and {project}/obj directories.",
                 () => DeleteDirs($"{PROJECT_DIR}/bin", $"{PROJECT_DIR}/obj"));
 
-            Target("clean-all", "Calls clean and then also deletes the /dist directory\n",
+            Target("clean-all", "Calls clean and then also deletes the /dist directory",
                 DependsOn("clean"),
                 () => DeleteDirs(OUTPUT_DIR));
 
@@ -66,7 +65,7 @@ namespace build
                 DependsOn("clean"),
                 () => Publish("any"));
 
-            Target("format", "",
+            Target("format", "Calls dotnet-format to enforce format rules in the .editorconfig file.",
                 () => {
                     try {
                         Run("dotnet", $"format {PROJECT}");
