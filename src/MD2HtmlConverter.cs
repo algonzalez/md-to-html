@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -61,7 +62,7 @@ namespace MD2Html
             set => _codeSyntaxHighlightingProvider = value;
         }
 
-        public bool SkipSizeCheck { get; set; }
+        public bool SkipMeta { get; set; }
 
         public bool SkipToc { get; set; }
 
@@ -154,6 +155,13 @@ namespace MD2Html
     <title>
       {title}
     </title>");
+                if (!SkipMeta) {
+                    var version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+                    sw.WriteLine($"    <meta name=\"created-on\" content=\"{DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")}\">");
+                    sw.WriteLine("    <meta name=\"created-with\" content=\"md2html\">");
+                    sw.WriteLine("    <meta name=\"md2html:url\" content=\"https://github.com/algonzalez/md-to-html\">");
+                    sw.WriteLine($"    <meta name=\"md2html:version\" content=\"{version}\">");
+                }
                 if (mdDoc.AnyCode()) {
                     sw.WriteLine(SyntaxHighlightingProvider.GetSyntaxHighLighter());
                 }

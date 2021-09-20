@@ -21,6 +21,7 @@ namespace MD2Html
                 ctx.ParseResult.ValueForOption<bool>("--overwrite"),
                 ctx.ParseResult.ValueForOption<bool>("--content-only"),
                 ctx.ParseResult.ValueForOption<bool>("--launch"),
+                ctx.ParseResult.ValueForOption<bool>("--no-meta"),
                 ctx.ParseResult.ValueForOption<bool>("--no-toc"),
                 ctx.ParseResult.ValueForOption<string>("--out-dir"),
                 ctx.ParseResult.ValueForOption<string>("--highlighter"),
@@ -37,6 +38,7 @@ namespace MD2Html
             , bool overwrite
             , bool contentOnly
             , bool launch
+            , bool skipMeta
             , bool skipToc
             , string outDir
             , string highlighter
@@ -57,6 +59,7 @@ namespace MD2Html
                             ? null
                             : new FileSyntaxHighlightingProvider(highlighter),
                     StyleProviders = new IStyleProvider[style.Length],
+                    SkipMeta = skipMeta,
                     SkipToc = skipToc,
                     TocClassName = tocClassName
                 };

@@ -76,6 +76,9 @@ namespace MD2Html
             };
             rootCommand.AddOption(syntaxHightlighterOption);
 
+            rootCommand.AddOption(new Option<bool>("--no-meta",
+                description: "Do not generate meta tags"));
+
             rootCommand.AddOption(new Option<string>("--toc-class",
                 description: "The CSS class name for the div wrapping the toc.",
                 getDefaultValue: () => "toc") {
