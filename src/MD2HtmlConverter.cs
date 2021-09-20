@@ -17,16 +17,12 @@ namespace MD2Html
 {
     class MD2HtmlConverter
     {
-        public static readonly int DefaultMaxFileSizeSupported = 64 * 1024; // 64K
-        public static readonly int MinFileSizeSupported = 4 * 1024;         //  4K
-
         private readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
                 .UseEmojiAndSmiley()
                 .UseYamlFrontMatter()       // used to extract the title
                 .UseAdvancedExtensions()
                 .Build();
 
-        int _maxFileSizeSupported = DefaultMaxFileSizeSupported;
         string _outputDirectory;
         string _tocClassName;
         IStyleProvider[] _styleProviders;
@@ -35,14 +31,6 @@ namespace MD2Html
         public bool ContentOnly { get; set; }
 
         public bool LaunchFile { get; set; }
-
-        public int MaxFileSizeSupported
-        {
-            get => _maxFileSizeSupported;
-            set => _maxFileSizeSupported = value < MinFileSizeSupported
-                ? MinFileSizeSupported
-                : value;
-        }
 
         public string OutputDirectory
         {
@@ -72,6 +60,8 @@ namespace MD2Html
             get => _codeSyntaxHighlightingProvider ??= new DefaultSyntaxHighlightingProvider();
             set => _codeSyntaxHighlightingProvider = value;
         }
+
+        public bool SkipSizeCheck { get; set; }
 
         public bool SkipToc { get; set; }
 
@@ -140,9 +130,6 @@ namespace MD2Html
             var fi = new FileInfo(filePath);
             if (!fi.Exists)
                 throw new ArgumentException("File was not found");
-
-            if (fi.Length > DefaultMaxFileSizeSupported)
-                throw new Exception($"Only supports converting files upto {MaxFileSizeSupported / 1024}K in size");
 
             if (OutputToFile && File.Exists(outputFilePath)) {
                 if (OverwriteIfExists)
